@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from fastapi.security import HTTPAuthorizationCredentials
 
 from src.api.core.dependencies import AuthUser
 
