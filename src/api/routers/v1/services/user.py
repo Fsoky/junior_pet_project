@@ -11,7 +11,6 @@ from src.api.routers.v1.schemas import (
     UpdateUserSchema
 )
 
-
 from src.db.models import User
 from src.db.schemas import UserSchema
 
