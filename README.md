@@ -163,7 +163,7 @@ def __lt__(self, other: Role) -> bool:
 ```
 
 Почему так? - Этот enum создан для `CharEnumField` tortoise-orm, а черепаха принимает насколько мне известно только StrEnum
-Решение у этой проблемы несколько:
+Решений у этой проблемы несколько:
 
 1. Вместо Role указать str и ругаться не будет. Но это такой себе вариант, будто логически не соответствует.
 2. Написать метод `has_permission(role: Role)` и делать проверку там.
@@ -178,7 +178,7 @@ class Role:
     return self._order[self.value] >= self._order[other.value]
 
 # Usage
-admin.role.has_permissions(employee.role)
+admin.role.has_permission(employee.role)
 ```
 
 Но я пока что оставил как есть, возможно перепишу.
