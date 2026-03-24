@@ -147,42 +147,6 @@ hashed_password = bcrypt.hashpw(schema.password.encode(), bcrypt.gensalt())
 updated_schema = schema.model_copy(update={"password": hashed_password.decode()})
 ```
 
-- Mypy ругается
-
-Единственное на что ругается mypy, так это на enum `Role`. Внутри прописана логика для magic методов lt gt, которые принимают Role.
-
-```
-This violates the Liskov substitution principle
-```
-
-```python
-def __lt__(self, other: Role) -> bool:
-    if not isinstance(other, Role):
-        return NotImplemented
-    return _order[self.value] < _order[other.value]
-```
-
-Почему так? - Этот enum создан для `CharEnumField` tortoise-orm, а черепаха принимает насколько мне известно только StrEnum
-Решений у этой проблемы несколько:
-
-1. Вместо Role указать str и ругаться не будет. Но это такой себе вариант, будто логически не соответствует.
-2. Написать метод `has_permission(role: Role)` и делать проверку там.
-
-```python
-_order = {...}
-
-class Role:
-  ...
-
-  def has_permission(self, other: Role) -> bool:
-    return self._order[self.value] >= self._order[other.value]
-
-# Usage
-admin.role.has_permission(employee.role)
-```
-
-Но я пока что оставил как есть, возможно перепишу.
-
 ## Мысли в слух
 
 Привет, меня зовут Даниил. Мысли в слух - это пару слов об этом проекте. \
