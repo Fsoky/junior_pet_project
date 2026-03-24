@@ -48,7 +48,7 @@ class StaffService(BaseService):
             return self.error("User not found or inactive")
         if user.staff_member:
             return self.error("Member already exists")
-        if admin.role == Role.ADMIN and schema.role >= Role.ADMIN:
+        if admin.role == Role.ADMIN and schema.role.has_permission(Role.ADMIN, operator="ge"):
             return self.error("You cannot add new members with admin, superadmin roles")
         
         await StaffMember.create(**schema.model_dump())
@@ -61,7 +61,7 @@ class StaffService(BaseService):
         
         if not employee:
             return self.error("Member not found or user inactive")
-        if admin.role <= employee.role:
+        if admin.role.has_permission(employee.role, operator="le"):
             return self.error("You cannot update members with admin, superadmin roles")
         
         employee.update_from_dict(schema.model_dump(exclude_unset=True, exclude_none=True))
@@ -74,7 +74,7 @@ class StaffService(BaseService):
         
         if not employee:
             return self.error("Member not found or user inactive")
-        if admin.role <= employee.role:
+        if admin.role.has_permission(employee.role, operator="le"):
             return self.error("You cannot delete members with admin, superadmin roles")
         
         await employee.delete()

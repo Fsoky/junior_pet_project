@@ -50,7 +50,7 @@ async def check_is_staff_employee(user: AuthenticatedUser = Depends(auth_by_toke
 async def check_is_staff_admin(
     staff_member: StaffMember = Depends(check_is_staff_employee)
 ) -> StaffMember:
-    if staff_member.role >= Role.ADMIN:
+    if staff_member.role.has_permission(Role.ADMIN, operator="ge"):
         return staff_member
     raise HTTPException(403, "Forbidden (no staff admin)")
 
