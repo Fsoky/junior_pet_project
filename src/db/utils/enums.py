@@ -1,9 +1,5 @@
-"""mypy будет ругаться на методы в классе (tortoise-orm принимает strEnum)
-other: Role можно поменять на str или написать метод has_permissions(...)
-и не использовать magic-методы
-"""
-
 from __future__ import annotations
+from typing import Literal
 from enum import Enum
 
 _order = {
@@ -24,18 +20,20 @@ class Role(str, Enum):
     ADMIN = "admin"
     SUPERADMIN = "superadmin"
     
-    def __lt__(self, other: Role) -> bool:
-        if not isinstance(other, Role):
-            return NotImplemented
-        return _order[self.value] < _order[other.value]
-    
-    def __gt__(self, other: Role) -> bool:
-        if not isinstance(other, Role):
-            return NotImplemented
-        return _order[self.value] > _order[other.value]
-    
-    def __le__(self, other: Role) -> bool:
-        return self < other or self == other
-    
-    def __ge__(self, other: Role) -> bool:
-        return self > other or self == other
+    def has_permission(
+        self,
+        role: Role,
+        *,
+        operator: Literal["gt", "lt", "ge", "le"] = "gt"
+    ) -> bool:
+        match operator:
+            case "gt":
+                return _order[self.value] > _order[role.value]
+            case "lt":
+                return _order[self.value] < _order[role.value]
+            case "ge":
+                return _order[self.value] >= _order[role.value]
+            case "le":
+                return _order[self.value] <= _order[role.value]
+            case _:
+                raise ValueError(f"Unknown operator ({operator})")
