@@ -10,6 +10,7 @@
 - Pydantic
 - Redis
 - PyJWT
+- Docker
 
 **Структура проекта**
 
@@ -31,12 +32,7 @@
 │   │   ├── models
 │   │   ├── schemas
 │   │   ├── utils
-├──.env
-├──.gitignore
-├──.python-version
-├──pyproject.toml
-├──README.md
-├──uv.lock
+├──...
 ```
 
 **Описание проекта**
@@ -72,7 +68,15 @@
 **.env**
 
 ```bash
-DB_URL=asyncpg://postgres:toor@localhost:5432/juniordb
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=toor
+POSTGRES_DB=juniordb
+POSTGRES_HOST=pg
+POSTGRES_PORT=5432
+
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=
 ```
 
 **Виртуальное окружение**
@@ -104,6 +108,12 @@ uv run -m src.__main__
 
 ```bash
 https://localhost:8000/docs
+```
+
+## PROD
+
+```bash
+docker compose up
 ```
 
 ## Акцент на моментах
